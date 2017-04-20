@@ -56,5 +56,15 @@ app.on('activate', function () {
   }
 })
 
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+  if (url === 'https://BRENDANFORS4110/') {
+    // Verification logic.
+    event.preventDefault()
+    callback(true)
+  } else {
+    callback(false)
+  }
+});
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
