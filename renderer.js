@@ -21,4 +21,5 @@ ipcRenderer.on('certificate-error', (event,  { certificate, error, url }) => {
 
 ipcRenderer.on('some-result-from-certificate', (event) => {
     debugger
+    console.log('the action completed')
 })
