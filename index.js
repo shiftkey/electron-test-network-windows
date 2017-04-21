@@ -3,6 +3,8 @@ const electron = require('electron')
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
+const ipcMain = electron.ipcMain
+const dialog = electron.dialog
 
 const path = require('path')
 const url = require('url')
@@ -56,15 +58,23 @@ app.on('activate', function () {
   }
 })
 
-app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  if (url === 'https://BRENDANFORS4110/') {
-    // Verification logic.
-    event.preventDefault()
-    callback(true)
-  } else {
-    callback(false)
+app.on('certificate-error', (event, webContents, url, error, certificate, callback ) => {
+  debugger
+  callback(false)
+
+  if (mainWindow) {
+    mainWindow.webContents.send('certificate-error', { certificate, error, url })
   }
-});
+})
+
+
+ipcMain.on('show-certificate-trust-dialog', (event, certificate, message ) => {
+  debugger
+  
+  dialog.showCertificateTrustDialog(mainWindow, { certificate, message }, () => {
+    mainWindow.webContents.send('some-result-from-certificate')
+  })
+})
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
